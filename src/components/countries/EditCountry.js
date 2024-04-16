@@ -85,6 +85,10 @@ const EditCountry = (props) => {
                 onChange={country.handleChange}
               />
             </Form.Group>
+            {country.errors.description && country.touched.description &&
+              <p>{ country.errors.description }</p>
+            }
+
             <Button variant="primary" type="submit">
               Confirm
             </Button>
