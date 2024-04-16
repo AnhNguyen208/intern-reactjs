@@ -15,6 +15,7 @@ import ConstantList from "./app/appConfig";
 import HttpService from "app/services/HttpService";
 import { store, StoreContext } from "./app/stores";
 import "./i18n";
+import 'react-toastify/dist/ReactToastify.css';
 //import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const renderApp = () =>
