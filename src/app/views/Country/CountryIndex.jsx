@@ -14,8 +14,9 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import { useFormik } from 'formik';
-import { pagingCountries } from './CountryService';
 import CountryModal from './CountryModal';
+import { observer } from "mobx-react";
+import { useStore } from "app/stores";
 
 const useStyles = makeStyles((theme) => ({
     contentIndex: {
@@ -36,34 +37,23 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function CountryIndex() {
+export default observer(function CountryIndex() {
+    const { countryStore } = useStore();
+    const { countryList } = countryStore;
+
     const classes = useStyles();
-    const [rows, setRows] = useState([]);
     const [isShowModal, setIsShowModal] = useState(false);
     const [type, setType] = useState("");
-    const [idCountry, setIdCountry] = useState("");
-
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [total, setTotal] = useState(100);
 
     const search = useFormik({
         initialValues: {
             keyword: "",
         },
-        onSubmit: async (values) => {
-            let searchObject = {
-                pageIndex: page + 1,
-                pageSize: rowsPerPage,
-                keyword: values.keyword,
-            }
-            let countries = [];
-            let data = await pagingCountries(searchObject);
-            data.data.content.map((country) => {
-                countries.push(country);
-            });
-            setRows(countries);
-            setTotal(data.data.totalElements);
+        onSubmit: (values) => {
+            countryStore.pagingCountriesAsync(page, rowsPerPage, values.keyword);
+            setPage(0);
         }
     });
 
@@ -77,44 +67,28 @@ export default function CountryIndex() {
     };
 
     function handleClose() {
-        setIdCountry("")
         setIsShowModal(false);
     }
 
     function handleAddBtn() {
+        countryStore.clearCurrentCountry();
         setIsShowModal(true);
         setType("new");
-        setIdCountry("");
     }
 
     function handleDetailBtn({ id }) {
+        countryStore.getCountryAsync(id);
         setIsShowModal(true);
         setType("detail");
-        setIdCountry(id);
     }
 
     function handleUpdateTable() {
-        page === 0 ? loadCountries() : setPage(0); 
+        page === 0 ? countryStore.pagingCountriesAsync(page, rowsPerPage, search.values.keyword) : setPage(0);
     }
 
     useEffect(() => {
-        loadCountries();
+        countryStore.pagingCountriesAsync(page, rowsPerPage, search.values.keyword);
     }, [page, rowsPerPage]);
-
-    async function loadCountries() {
-        let searchObject = {
-            pageIndex: page + 1,
-            pageSize: rowsPerPage,
-            keyword: search.values.keyword,
-        }
-        let data = await pagingCountries(searchObject);
-        let countries = [];
-        data.data.content.map((country) => {
-            countries.push(country);
-        });
-        setRows(countries);
-        setTotal(data.data.totalElements);
-    }
 
     return (
         <>
@@ -161,29 +135,29 @@ export default function CountryIndex() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                    {rows.map((row, index) => (
-                        <TableRow key={row.id} >
-                            <TableCell className={classes.cell}>{index + 1}</TableCell>
-                            <TableCell className={classes.cell}>{row.name}</TableCell>
-                            <TableCell className={classes.cell}>{row.code}</TableCell>
-                            <TableCell className={classes.cell}>{row.description}</TableCell>
-                            <TableCell className={classes.cell}>
-                                <Button
-                                    className={classes.cellButton}
-                                    variant="contained"
-                                    onClick={() => handleDetailBtn(row)}
-                                >
-                                    Detail
-                                </Button>
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                        {countryList.map((row, index) => (
+                            <TableRow key={row.id} >
+                                <TableCell className={classes.cell}>{rowsPerPage * (page) + index + 1}</TableCell>
+                                <TableCell className={classes.cell}>{row.name}</TableCell>
+                                <TableCell className={classes.cell}>{row.code}</TableCell>
+                                <TableCell className={classes.cell}>{row.description}</TableCell>
+                                <TableCell className={classes.cell}>
+                                    <Button
+                                        className={classes.cellButton}
+                                        variant="contained"
+                                        onClick={() => handleDetailBtn(row)}
+                                    >
+                                        Detail
+                                    </Button>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </TableContainer>
             <TablePagination
                 component="div"
-                count={total}
+                count={countryStore.totalCountries}
                 page={page}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
@@ -192,10 +166,9 @@ export default function CountryIndex() {
             <CountryModal
                 isShowModal={isShowModal}
                 type={type}
-                idCountry={idCountry}
                 handleClose={handleClose}
                 handleUpdateTable={handleUpdateTable}
             />
         </>
     )
-}
+});

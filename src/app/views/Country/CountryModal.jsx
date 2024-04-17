@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { getCountry, createCountry, editCountry, deleteCountry } from './CountryService';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import Input from '@material-ui/core/Input';
@@ -10,9 +9,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { observer } from "mobx-react";
+import { useStore } from "app/stores";
 
 function getModalStyle() {
   const top = 50;
@@ -44,10 +44,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CountryModal(props) {
+export default observer(function CountryModal(props) {
+  const { countryStore } = useStore();
+  const { currentCountry } = countryStore;
+  
   const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
-  const { isShowModal, type, handleClose, idCountry, handleUpdateTable } = props;
+  const { isShowModal, type, handleClose, handleUpdateTable } = props;
   
   const [title, setTitle] = useState("");
   const [showEditBtn, setShowEditBtn] = useState(false);
@@ -68,17 +71,18 @@ export default function CountryModal(props) {
       code: Yup.string().required('You must fill the country code'),
       description: Yup.string().required('You must fill the country description'),
     }),
-    onSubmit: async (values) =>  {
-      if (values.id === '') {
-        await createCountry(values);
-        toast.success("A Country is created succeed!");
+    onSubmit: async (values) => {
+      if (values.id === undefined) {
+        countryStore.createCountryAsync(values).then(() => {
+          handleUpdateTable();
+        });
       } else {
-        await editCountry(values);
-        toast.success("Edit country successfully!");
+        countryStore.editCountryAsync(values).then(() => {
+          handleUpdateTable();
+        });
       }
-      handleClose();
-      handleUpdateTable();
       country.resetForm();
+      handleClose();
     }
   });
 
@@ -98,12 +102,13 @@ export default function CountryModal(props) {
   };
 
   async function handleAgreeBtn() {
-    await deleteCountry(country.values.id);
-    toast.success("Delete country successfully!!!");
+    countryStore.deleteCountryAsync(country.values.id).then(() => {
+      handleUpdateTable();
+    });
+    country.resetForm();
+    handleUpdateTable();
     setOpenDialog(false);
     handleClose();
-    handleUpdateTable();
-    country.resetForm();
   }
   
   useEffect(() => { 
@@ -130,20 +135,11 @@ export default function CountryModal(props) {
         setShowSubmitBtn(true);
         setDisable(false);
     }
-    loadCountry();
-  }, [idCountry, type]);
-
-  async function loadCountry() {
-    if (idCountry) {
-      let data = await getCountry(idCountry);
-      if (data && data.data) {
-        const { id, name, code, description } = data.data;
-        country.setValues({
-          id, name, code, description
-        });
-      }
-    }
-  }
+    const { id, name, code, description } = currentCountry;
+    country.setValues({
+      id, name, code, description
+    });
+  }, [type, currentCountry]);
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
@@ -260,4 +256,4 @@ export default function CountryModal(props) {
     </>
   );
   
-}
+})
