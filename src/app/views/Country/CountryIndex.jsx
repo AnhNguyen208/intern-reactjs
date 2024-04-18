@@ -13,6 +13,11 @@ import Box from '@material-ui/core/Box';
 import TablePagination from '@material-ui/core/TablePagination';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import { useFormik } from 'formik';
 import CountryModal from './CountryModal';
 import { observer } from "mobx-react";
@@ -39,13 +44,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default observer(function CountryIndex() {
     const { countryStore } = useStore();
-    const { countryList } = countryStore;
+    const { countryList, currentCountry } = countryStore;
 
     const classes = useStyles();
     const [isShowModal, setIsShowModal] = useState(false);
     const [type, setType] = useState("");
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [openDialog, setOpenDialog] = useState(false);
+
 
     const search = useFormik({
         initialValues: {
@@ -66,7 +73,7 @@ export default observer(function CountryIndex() {
         setPage(0);
     };
 
-    function handleClose() {
+    function handleCloseModal() {
         setIsShowModal(false);
     }
 
@@ -76,10 +83,27 @@ export default observer(function CountryIndex() {
         setType("new");
     }
 
-    function handleDetailBtn({ id }) {
+    function handleEditBtn({ id }) {
         countryStore.getCountryAsync(id);
         setIsShowModal(true);
-        setType("detail");
+        setType("edit");
+    }
+
+    function handleDeleteBtn({ id }) {
+        countryStore.getCountryAsync(id);
+        setOpenDialog(true)
+    }
+
+    function handleCloseDialog () {
+        setOpenDialog(false);
+    }
+
+    function handleAgreeBtn() {
+        countryStore.deleteCountryAsync(currentCountry.id).then(() => {
+            handleUpdateTable();
+        });
+        handleUpdateTable();
+        setOpenDialog(false);
     }
 
     function handleUpdateTable() {
@@ -145,9 +169,18 @@ export default observer(function CountryIndex() {
                                     <Button
                                         className={classes.cellButton}
                                         variant="contained"
-                                        onClick={() => handleDetailBtn(row)}
+                                        color="primary"
+                                        onClick={() => handleEditBtn(row)}
                                     >
-                                        Detail
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        className={classes.cellButton}
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => handleDeleteBtn(row)}
+                                    >
+                                    Delete
                                     </Button>
                                 </TableCell>
                             </TableRow>
@@ -155,6 +188,28 @@ export default observer(function CountryIndex() {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Delete country"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        This action can't be undone!
+                        Do you want to delete this Country?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        Disagree
+                    </Button>
+                    <Button onClick={handleAgreeBtn} color="primary" autoFocus>
+                        Agree
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <TablePagination
                 component="div"
                 count={countryStore.totalCountries}
@@ -166,7 +221,7 @@ export default observer(function CountryIndex() {
             <CountryModal
                 isShowModal={isShowModal}
                 type={type}
-                handleClose={handleClose}
+                handleCloseModal={handleCloseModal}
                 handleUpdateTable={handleUpdateTable}
             />
         </>

@@ -4,11 +4,6 @@ import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { observer } from "mobx-react";
@@ -45,19 +40,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default observer(function CountryModal(props) {
+  const classes = useStyles();
+
   const { countryStore } = useStore();
   const { currentCountry } = countryStore;
+  const { isShowModal, type, handleCloseModal, handleUpdateTable } = props;
   
-  const classes = useStyles();
   const [modalStyle] = useState(getModalStyle);
-  const { isShowModal, type, handleClose, handleUpdateTable } = props;
-  
   const [title, setTitle] = useState("");
-  const [showEditBtn, setShowEditBtn] = useState(false);
-  const [showDeleteBtn, setShowDeleteBtn] = useState(false);
-  const [showSubmitBtn, setShowSubmitBtn] = useState(false);
-  const [disable, setDisable] = useState(false);
-  const [openDialog, setOpenDialog] = useState(false);
 
   const country = useFormik({
     initialValues: {
@@ -82,58 +72,21 @@ export default observer(function CountryModal(props) {
         });
       }
       country.resetForm();
-      handleClose();
+      handleCloseModal();
     }
   });
 
-  function handleEditBtn() {
-    setDisable(false);
-    setShowEditBtn(false);
-    setShowDeleteBtn(false);
-    setShowSubmitBtn(true);
-  }
-
-  function handleDeleteBtn() {
-    setOpenDialog(true)
-  }
-
-  function handleCloseDialog () {
-    setOpenDialog(false);
-  };
-
-  async function handleAgreeBtn() {
-    countryStore.deleteCountryAsync(country.values.id).then(() => {
-      handleUpdateTable();
-    });
-    country.resetForm();
-    handleUpdateTable();
-    setOpenDialog(false);
-    handleClose();
-  }
-  
   useEffect(() => { 
     country.resetForm();
     switch(type) {
       case "new":
         setTitle("Add new country");
-        setShowEditBtn(false);
-        setShowDeleteBtn(false);
-        setShowSubmitBtn(true);
-        setDisable(false);
         break;
-      case "detail":
-        setTitle("Detail country");
-        setShowEditBtn(true);
-        setShowDeleteBtn(true);
-        setShowSubmitBtn(false);
-        setDisable(true);
+      case "edit":
+        setTitle("Edit country");
         break;
       default:
         setTitle("Add new country");
-        setShowEditBtn(false);
-        setShowDeleteBtn(false);
-        setShowSubmitBtn(true);
-        setDisable(false);
     }
     const { id, name, code, description } = currentCountry;
     country.setValues({
@@ -153,7 +106,6 @@ export default observer(function CountryModal(props) {
             label="Name"
             value={country.values.name}
             onChange={country.handleChange}
-            disabled={disable}
           />
           {country.errors.name && country.touched.name &&
             <p>{ country.errors.name }</p>
@@ -166,7 +118,6 @@ export default observer(function CountryModal(props) {
             label="Code"
             value={country.values.code}
             onChange={country.handleChange}
-            disabled={disable}
           />
           {country.errors.code && country.touched.code &&
             <p>{ country.errors.code }</p>
@@ -179,64 +130,17 @@ export default observer(function CountryModal(props) {
             label="Description"
             value={country.values.description}
             onChange={country.handleChange}
-            disabled={disable}
           />
           {country.errors.description && country.touched.description &&
             <p>{ country.errors.description }</p>
           }
-
-          {showEditBtn && 
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleEditBtn}
-            >
-                Edit
-            </Button>
-          }
-          {showDeleteBtn &&  
-          <>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleDeleteBtn}
-            >
-              Delete
-            </Button>
-            <Dialog
-              open={openDialog}
-              onClose={handleCloseDialog}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogTitle id="alert-dialog-title">{"Delete country"}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  This action can't be undone!
-                  Do you want to delete this Country?
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleCloseDialog} color="primary">
-                  Disagree
-                </Button>
-                <Button onClick={handleAgreeBtn} color="primary" autoFocus>
-                  Agree
-                </Button>
-              </DialogActions>
-            </Dialog>
-          </>  
-            
-          }
-          {showSubmitBtn &&
-            <Button
+          <Button
             variant="contained"
             color="primary"
             type="submit"
-            >
-              Submit
-            </Button>
-          }
+          >
+            Submit
+          </Button>
         </form>
       </div>
       
@@ -247,7 +151,7 @@ export default observer(function CountryModal(props) {
     <>
       <Modal
         open={isShowModal}
-        onClose={handleClose}
+        onClose={handleCloseModal}
         aria-labelledby="simple-modal-title"
         aria-describedby="simple-modal-description"
       >
