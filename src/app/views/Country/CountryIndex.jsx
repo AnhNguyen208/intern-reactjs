@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
         border: "1px solid #ddd",
         minWidth: 650,
         borderCollapse: "collapse",
-        overflowX : "auto",
+        overflowX: "auto",
     },
     cell: {
         border: "1px solid #ddd",
@@ -91,10 +91,10 @@ export default observer(function CountryIndex() {
 
     function handleDeleteBtn({ id }) {
         countryStore.getCountryAsync(id);
-        setOpenDialog(true)
+        setOpenDialog(true);
     }
 
-    function handleCloseDialog () {
+    function handleCloseDialog() {
         setOpenDialog(false);
     }
 
@@ -180,7 +180,7 @@ export default observer(function CountryIndex() {
                                         color="secondary"
                                         onClick={() => handleDeleteBtn(row)}
                                     >
-                                    Delete
+                                        Delete
                                     </Button>
                                 </TableCell>
                             </TableRow>

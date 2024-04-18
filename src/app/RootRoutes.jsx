@@ -6,6 +6,9 @@ import dashboardRoutes from "./views/dashboard/DashboardRoutes";
 // import roleRoutes from "./views/Role/RoleRoutes";
 import ConstantList from "./appConfig";
 import countryRoutes from "./views/Country/CountryRoutes";
+import ethnicsRoutes from "./views/Ethnics/EthnicsRoutes";
+import religionRoutes from "./views/Religion/ReligionRoutes";
+import familyRelationshipRoutes from "./views/FamilyRelationship/FamilyRelationshipRoutes"
 
 const redirectRoute = [
   {
@@ -28,6 +31,9 @@ const routes = [
   // ...userRoutes,
   // ...roleRoutes,
   ...countryRoutes,
+  ...ethnicsRoutes,
+  ...religionRoutes,
+  ...familyRelationshipRoutes,
   ...errorRoute,
 ];
 

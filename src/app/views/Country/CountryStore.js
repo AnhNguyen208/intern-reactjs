@@ -1,4 +1,3 @@
-
 import { pagingCountries, getCountry, createCountry, editCountry, deleteCountry } from './CountryService';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { toast } from 'react-toastify';
@@ -75,7 +74,7 @@ export default class CountryStore {
     } catch (error) {
       runInAction(() => {
         this.status = "error";
-        toast.error("Error when editing new country");
+        toast.error("Error when editing country");
       });
     }
   };
@@ -92,7 +91,7 @@ export default class CountryStore {
     } catch (error) {
       runInAction(() => {
         this.status = "error";
-        toast.error("Error when deleting new country");
+        toast.error("Error when deleting country");
       });
     }
   };
