@@ -102,7 +102,6 @@ export default observer(function CountryIndex() {
         countryStore.deleteCountryAsync(currentCountry.id).then(() => {
             handleUpdateTable();
         });
-        handleUpdateTable();
         setOpenDialog(false);
     }
 

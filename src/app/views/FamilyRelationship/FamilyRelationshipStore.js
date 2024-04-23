@@ -5,7 +5,7 @@ export default class FamilyRelationshipStore {
   familyRelationshipList = [];
   currentFamilyRelationship = {};
   status = 'initial';
-  totalCountries = 0;
+  totalFamilyRelationship = 0;
   constructor() {
     makeAutoObservable(this);
   }
@@ -20,7 +20,7 @@ export default class FamilyRelationshipStore {
       let data = await pagingFamilyRelationship(searchObject);
       runInAction(() => {
         this.familyRelationshipList = data.data.content;
-        this.totalCountries = data.data.totalElements;
+        this.totalFamilyRelationship = data.data.totalElements;
         this.status = 'success';
       });
     } catch {

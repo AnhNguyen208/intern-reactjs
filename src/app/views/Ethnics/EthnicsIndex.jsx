@@ -19,7 +19,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { useFormik } from 'formik';
-import EthnicsModal from './EthnicsModal';
+import EthnicsModal from '../FamilyRelationship/FamilyRelationshipModal';
 import { observer } from "mobx-react";
 import { useStore } from "app/stores";
 
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default observer(function EthnicsIndex() {
   const { ethnicsStore } = useStore();
-  const { ethnicsList } = ethnicsStore;
+  const { ethnicsList, currentEthnics } = ethnicsStore;
 
   const classes = useStyles();
   const [isShowModal, setIsShowModal] = useState(false);
@@ -78,7 +78,7 @@ export default observer(function EthnicsIndex() {
   }
 
   function handleAddBtn() {
-    // ethnicsStore.clearCurrentEthnics();
+    ethnicsStore.clearCurrentEthnics();
     setIsShowModal(true);
     setType("new");
   }
@@ -99,10 +99,9 @@ export default observer(function EthnicsIndex() {
   }
 
   function handleAgreeBtn() {
-    // ethnicsStore.deleteEthnicsAsync(currentEthnics.id).then(() => {
-    //     handleUpdateTable();
-    // });
-    handleUpdateTable();
+    ethnicsStore.deleteEthnicsAsync(currentEthnics.id).then(() => {
+      handleUpdateTable();
+    });
     setOpenDialog(false);
   }
 
@@ -212,7 +211,7 @@ export default observer(function EthnicsIndex() {
       </Dialog>
       <TablePagination
         component="div"
-        count={ethnicsStore.totalCountries}
+        count={ethnicsStore.totalEthnicities}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}

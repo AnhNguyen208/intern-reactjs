@@ -34,6 +34,7 @@ export default class EthnicsStore {
   getEthnicsAsync = async (id) => {
     try {
       const { data } = await getEthnics(id);
+      console.log(data);
       runInAction(() => {
         this.currentEthnics = data;
         this.status = 'success';
@@ -96,8 +97,8 @@ export default class EthnicsStore {
     }
   };
 
-  // clearCurrentEthnics = () => {
-  //   this.currentEthnics = {};
-  // }
+  clearCurrentEthnics = () => {
+    this.currentEthnics = {};
+  }
 
 }

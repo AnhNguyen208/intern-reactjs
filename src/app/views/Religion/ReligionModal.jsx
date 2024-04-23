@@ -39,17 +39,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default observer(function EthnicsModal(props) {
+export default observer(function ReligionModal(props) {
   const classes = useStyles();
 
-  const { ethnicsStore } = useStore();
-  const { currentEthnics } = ethnicsStore;
+  const { religionStore } = useStore();
+  const { currentReligion } = religionStore;
   const { isShowModal, type, handleCloseModal, handleUpdateTable } = props;
   
   const [modalStyle] = useState(getModalStyle);
   const [title, setTitle] = useState("");
 
-  const ethnics = useFormik({
+  const religion = useFormik({
     initialValues: {
       id: '',
       name: '',
@@ -57,58 +57,58 @@ export default observer(function EthnicsModal(props) {
       description: '',
     },
     validationSchema: Yup.object({
-      name: Yup.string().required('You must fill the ethnics name'),
-      code: Yup.string().required('You must fill the ethnics code'),
-      description: Yup.string().required('You must fill the ethnics description'),
+      name: Yup.string().required('You must fill the religion name'),
+      code: Yup.string().required('You must fill the religion code'),
+      description: Yup.string().required('You must fill the religion description'),
     }),
     onSubmit: async (values) => {
       if (values.id === undefined || values.id === '') {
-        ethnicsStore.createEthnicsAsync(values).then(() => {
+        religionStore.createReligionAsync(values).then(() => {
           handleUpdateTable();
         });
       } else {
-        ethnicsStore.editEthnicsAsync(values).then(() => {
+        religionStore.editReligionAsync(values).then(() => {
           handleUpdateTable();
         });
       }
-      ethnics.resetForm();
+      religion.resetForm();
       handleCloseModal();
     }
   });
 
   useEffect(() => { 
-    ethnics.resetForm();
+    religion.resetForm();
     switch(type) {
       case "new":
-        setTitle("Add new ethnics");
+        setTitle("Add new religion");
         break;
       case "edit":
-        setTitle("Edit ethnics");
+        setTitle("Edit religion");
         break;
       default:
-        setTitle("Add new ethnics");
+        setTitle("Add new religion");
     }
-    const { id, name, code, description } = currentEthnics;
-    ethnics.setValues({
+    const { id, name, code, description } = currentReligion;
+    religion.setValues({
       id, name, code, description
     });
-  }, [type, currentEthnics]);
+  }, [type, currentReligion]);
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">{ title }</h2>
       <div id="simple-modal-description">
-        <form className={classes.root} noValidate autoComplete="off" onSubmit={ethnics.handleSubmit}>
+        <form className={classes.root} noValidate autoComplete="off" onSubmit={religion.handleSubmit}>
           <InputLabel htmlFor="name">Name</InputLabel>
           <Input
             className={classes.inputStyle}
             id="name"
             label="Name"
-            value={ethnics.values.name}
-            onChange={ethnics.handleChange}
+            value={religion.values.name}
+            onChange={religion.handleChange}
           />
-          {ethnics.errors.name && ethnics.touched.name &&
-            <p>{ ethnics.errors.name }</p>
+          {religion.errors.name && religion.touched.name &&
+            <p>{ religion.errors.name }</p>
           }
 
           <InputLabel htmlFor="code">Code</InputLabel>
@@ -116,11 +116,11 @@ export default observer(function EthnicsModal(props) {
             className={classes.inputStyle}
             id="code"
             label="Code"
-            value={ethnics.values.code}
-            onChange={ethnics.handleChange}
+            value={religion.values.code}
+            onChange={religion.handleChange}
           />
-          {ethnics.errors.code && ethnics.touched.code &&
-            <p>{ ethnics.errors.code }</p>
+          {religion.errors.code && religion.touched.code &&
+            <p>{ religion.errors.code }</p>
           }
 
           <InputLabel htmlFor="description">Description</InputLabel>
@@ -128,11 +128,11 @@ export default observer(function EthnicsModal(props) {
             className={classes.inputStyle}
             id="description"
             label="Description"
-            value={ethnics.values.description}
-            onChange={ethnics.handleChange}
+            value={religion.values.description}
+            onChange={religion.handleChange}
           />
-          {ethnics.errors.description && ethnics.touched.description &&
-            <p>{ ethnics.errors.description }</p>
+          {religion.errors.description && religion.touched.description &&
+            <p>{ religion.errors.description }</p>
           }
           <Button
             variant="contained"

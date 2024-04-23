@@ -13,25 +13,25 @@ export const navigations = [
     isVisible: true,
     children: [
       {
-        name: "Quốc gia",
+        name: "navigation.country",
         path: ConstantList.ROOT_PATH + "category/country",
         icon: "remove",
         isVisible: true,
       },
       {
-        name: "Dân tộc",
+        name: "navigation.ethnics",
         path: ConstantList.ROOT_PATH + "category/ethnics",
         icon: "remove",
         isVisible: true,
       },
       {
-        name: "Tôn giáo",
+        name: "navigation.religion",
         path: ConstantList.ROOT_PATH + "category/religion",
         icon: "remove",
         isVisible: true,
       },
       {
-        name: "Mối quan hệ gia đình",
+        name: "Quan hệ thân nhân",
         path: ConstantList.ROOT_PATH + "category/familyRelationship",
         icon: "remove",
         isVisible: true,

@@ -39,17 +39,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default observer(function EthnicsModal(props) {
+export default observer(function FamilyRelationshipModal(props) {
   const classes = useStyles();
 
-  const { ethnicsStore } = useStore();
-  const { currentEthnics } = ethnicsStore;
+  const { familyRelationshipStore } = useStore();
+  const { currentFamilyRelationship } = familyRelationshipStore;
   const { isShowModal, type, handleCloseModal, handleUpdateTable } = props;
   
   const [modalStyle] = useState(getModalStyle);
   const [title, setTitle] = useState("");
 
-  const ethnics = useFormik({
+  const familyRelationship = useFormik({
     initialValues: {
       id: '',
       name: '',
@@ -57,58 +57,58 @@ export default observer(function EthnicsModal(props) {
       description: '',
     },
     validationSchema: Yup.object({
-      name: Yup.string().required('You must fill the ethnics name'),
-      code: Yup.string().required('You must fill the ethnics code'),
-      description: Yup.string().required('You must fill the ethnics description'),
+      name: Yup.string().required('You must fill the familyRelationship name'),
+      code: Yup.string().required('You must fill the familyRelationship code'),
+      description: Yup.string().required('You must fill the familyRelationship description'),
     }),
     onSubmit: async (values) => {
       if (values.id === undefined || values.id === '') {
-        ethnicsStore.createEthnicsAsync(values).then(() => {
+        familyRelationshipStore.createFamilyRelationshipAsync(values).then(() => {
           handleUpdateTable();
         });
       } else {
-        ethnicsStore.editEthnicsAsync(values).then(() => {
+        familyRelationshipStore.editFamilyRelationshipAsync(values).then(() => {
           handleUpdateTable();
         });
       }
-      ethnics.resetForm();
+      familyRelationship.resetForm();
       handleCloseModal();
     }
   });
 
   useEffect(() => { 
-    ethnics.resetForm();
+    familyRelationship.resetForm();
     switch(type) {
       case "new":
-        setTitle("Add new ethnics");
+        setTitle("Add new familyRelationship");
         break;
       case "edit":
-        setTitle("Edit ethnics");
+        setTitle("Edit familyRelationship");
         break;
       default:
-        setTitle("Add new ethnics");
+        setTitle("Add new familyRelationship");
     }
-    const { id, name, code, description } = currentEthnics;
-    ethnics.setValues({
+    const { id, name, code, description } = currentFamilyRelationship;
+    familyRelationship.setValues({
       id, name, code, description
     });
-  }, [type, currentEthnics]);
+  }, [type, currentFamilyRelationship]);
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">{ title }</h2>
       <div id="simple-modal-description">
-        <form className={classes.root} noValidate autoComplete="off" onSubmit={ethnics.handleSubmit}>
+        <form className={classes.root} noValidate autoComplete="off" onSubmit={familyRelationship.handleSubmit}>
           <InputLabel htmlFor="name">Name</InputLabel>
           <Input
             className={classes.inputStyle}
             id="name"
             label="Name"
-            value={ethnics.values.name}
-            onChange={ethnics.handleChange}
+            value={familyRelationship.values.name}
+            onChange={familyRelationship.handleChange}
           />
-          {ethnics.errors.name && ethnics.touched.name &&
-            <p>{ ethnics.errors.name }</p>
+          {familyRelationship.errors.name && familyRelationship.touched.name &&
+            <p>{ familyRelationship.errors.name }</p>
           }
 
           <InputLabel htmlFor="code">Code</InputLabel>
@@ -116,11 +116,11 @@ export default observer(function EthnicsModal(props) {
             className={classes.inputStyle}
             id="code"
             label="Code"
-            value={ethnics.values.code}
-            onChange={ethnics.handleChange}
+            value={familyRelationship.values.code}
+            onChange={familyRelationship.handleChange}
           />
-          {ethnics.errors.code && ethnics.touched.code &&
-            <p>{ ethnics.errors.code }</p>
+          {familyRelationship.errors.code && familyRelationship.touched.code &&
+            <p>{ familyRelationship.errors.code }</p>
           }
 
           <InputLabel htmlFor="description">Description</InputLabel>
@@ -128,11 +128,11 @@ export default observer(function EthnicsModal(props) {
             className={classes.inputStyle}
             id="description"
             label="Description"
-            value={ethnics.values.description}
-            onChange={ethnics.handleChange}
+            value={familyRelationship.values.description}
+            onChange={familyRelationship.handleChange}
           />
-          {ethnics.errors.description && ethnics.touched.description &&
-            <p>{ ethnics.errors.description }</p>
+          {familyRelationship.errors.description && familyRelationship.touched.description &&
+            <p>{ familyRelationship.errors.description }</p>
           }
           <Button
             variant="contained"
