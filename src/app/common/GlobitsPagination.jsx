@@ -96,7 +96,7 @@ export default function GlobitsPagination(props) {
             onChange={handleChange}
           >
             {pageSizeOption.map((option, index) => (
-              <MenuItem value={option}>{option}</MenuItem>
+              <MenuItem key={"key-" + index } value={option}>{option}</MenuItem>
             ))}
           </TextField>
         </Grid>

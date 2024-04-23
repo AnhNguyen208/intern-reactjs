@@ -5,7 +5,9 @@ export default class FamilyRelationshipStore {
   familyRelationshipList = [];
   currentFamilyRelationship = {};
   status = 'initial';
-  totalFamilyRelationship = 0;
+  totalElements = 0;
+  totalPages = 0;  
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -13,14 +15,15 @@ export default class FamilyRelationshipStore {
   pagingFamilyRelationshipAsync = async (page, rowsPerPage, keyword) => {
     try {
       let searchObject = {
-        pageIndex: page + 1,
+        pageIndex: page,
         pageSize: rowsPerPage,
         keyword: keyword,
       }
       let data = await pagingFamilyRelationship(searchObject);
       runInAction(() => {
         this.familyRelationshipList = data.data.content;
-        this.totalFamilyRelationship = data.data.totalElements;
+        this.totalElements = data.data.totalElements;
+        this.totalPages = data.data.totalPages;
         this.status = 'success';
       });
     } catch {

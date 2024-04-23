@@ -6,7 +6,9 @@ export default class ReligionStore {
   religionList = [];
   currentReligion = {};
   status = 'initial';
-  totalReligions = 0;
+  totalElements = 0;
+  totalPages = 0;  
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -14,14 +16,15 @@ export default class ReligionStore {
   pagingReligionsAsync = async (page, rowsPerPage, keyword) => {
     try {
       let searchObject = {
-        pageIndex: page + 1,
+        pageIndex: page,
         pageSize: rowsPerPage,
         keyword: keyword,
       }
       let data = await pagingReligions(searchObject);
       runInAction(() => {
         this.religionList = data.data.content;
-        this.totalReligions = data.data.totalElements;
+        this.totalElements = data.data.totalElements;
+        this.totalPages = data.data.totalPages;
         this.status = 'success';
       });
     } catch {

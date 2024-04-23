@@ -6,7 +6,9 @@ export default class CountryStore {
   countryList = [];
   currentCountry = {};
   status = 'initial';
-  totalCountries = 0;
+  totalElements = 0;
+  totalPages = 0;  
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -14,14 +16,15 @@ export default class CountryStore {
   pagingCountriesAsync = async (page, rowsPerPage, keyword) => {
     try {
       let searchObject = {
-        pageIndex: page + 1,
+        pageIndex: page,
         pageSize: rowsPerPage,
         keyword: keyword,
       }
       let data = await pagingCountries(searchObject);
       runInAction(() => {
         this.countryList = data.data.content;
-        this.totalCountries = data.data.totalElements;
+        this.totalElements = data.data.totalElements;
+        this.totalPages = data.data.totalPages;
         this.status = 'success';
       });
     } catch {

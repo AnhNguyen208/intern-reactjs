@@ -43,16 +43,40 @@ export default function GlobitsTable(props) {
           paging: false,
           search: false,
           toolbar: false,
-          maxBodyHeight: "300px",
+          maxBodyHeight: "100vh",
           headerStyle: {
-            backgroundColor: "#e3f2fd",
-            // color: "#fff",
+            backgroundColor: "#01579b",
+            color: "#fff",
             position: "sticky",
           },
-          // rowStyle: (rowData, index) => ({
-          //   backgroundColor: index % 2 === 1 ? "rgb(237, 245, 251)" : "#FFF",
-          // }),
+          rowStyle: (rowData, index) => ({
+            backgroundColor: index % 2 === 1 ? "rgb(237, 245, 251)" : "#FFF",
+          }),
         }}
+        actions={[
+          {
+            icon: 'edit',
+            tooltip: 'Edit',
+            iconProps: {
+              color: "primary",
+            },
+            onClick: (event, rowData) => props.handleEditBtn(rowData)
+          },
+          {
+            icon: 'delete',
+            tooltip: 'Delete',
+            iconProps: {
+              color: "error",
+            },
+            onClick: (event, rowData) => props.handleDeleteBtn(rowData)
+          },
+          {
+            icon: 'add',
+            tooltip: 'Add User',
+            isFreeAction: true,
+            onClick: (event) => alert("You want to add a new row")
+          }
+        ]}
         onSelectionChange={(rows) => {
           handleSelectList(rows);
         }}

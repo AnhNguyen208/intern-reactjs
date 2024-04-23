@@ -6,7 +6,9 @@ export default class EthnicsStore {
   ethnicsList = [];
   currentEthnics = {};
   status = 'initial';
-  totalEthnicities = 0;
+  totalElements = 0;
+  totalPages = 0;  
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -14,14 +16,15 @@ export default class EthnicsStore {
   pagingEthnicitiesAsync = async (page, rowsPerPage, keyword) => {
     try {
       let searchObject = {
-        pageIndex: page + 1,
+        pageIndex: page,
         pageSize: rowsPerPage,
         keyword: keyword,
       }
       let data = await pagingEthnicities(searchObject);
       runInAction(() => {
         this.ethnicsList = data.data.content;
-        this.totalEthnicities = data.data.totalElements;
+        this.totalElements = data.data.totalElements;
+        this.totalPages = data.data.totalPages;
         this.status = 'success';
       });
     } catch {
