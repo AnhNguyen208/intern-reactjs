@@ -9,6 +9,8 @@ import countryRoutes from "./views/Country/CountryRoutes";
 import ethnicsRoutes from "./views/Ethnics/EthnicsRoutes";
 import religionRoutes from "./views/Religion/ReligionRoutes";
 import familyRelationshipRoutes from "./views/FamilyRelationship/FamilyRelationshipRoutes"
+import departmentRoutes from "./views/Department/DepartmentRoutes";
+import materialRoutes from "./views/material-kit/MaterialRoutes";
 
 const redirectRoute = [
   {
@@ -34,7 +36,9 @@ const routes = [
   ...ethnicsRoutes,
   ...religionRoutes,
   ...familyRelationshipRoutes,
+  ...departmentRoutes,
   ...errorRoute,
+  ...materialRoutes,
 ];
 
 export default routes;

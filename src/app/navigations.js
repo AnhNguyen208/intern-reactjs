@@ -36,6 +36,12 @@ export const navigations = [
         icon: "remove",
         isVisible: true,
       },
+      {
+        name: "navigation.department",
+        path: ConstantList.ROOT_PATH + "category/department",
+        icon: "remove",
+        isVisible: true,
+      },
     ],
   },
   

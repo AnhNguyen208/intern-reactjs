@@ -2,51 +2,45 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
-import Input from '@material-ui/core/Input';
+import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { observer } from "mobx-react";
 import { useStore } from "app/stores";
-
-function getModalStyle() {
-  const top = 50;
-  const left = 50;
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    '& > *': {
-        margin: theme.spacing(1),
-    },
-  },
   paper: {
     position: 'absolute',
+    top: "50%",
+    left: "50%",
     width: 500,
+    transform: "translate(-50%, -50%)",
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
   inputStyle: {
-    width: 400,  
+    width: 400,
   },
+  modalContent: {
+    backgroundColor: "#fefefe",
+    margin: "10% auto",
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  }
 }));
-
 export default observer(function FamilyRelationshipModal(props) {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   const { familyRelationshipStore } = useStore();
   const { currentFamilyRelationship } = familyRelationshipStore;
   const { isShowModal, type, handleCloseModal, handleUpdateTable } = props;
-  
-  const [modalStyle] = useState(getModalStyle);
+
   const [title, setTitle] = useState("");
 
   const familyRelationship = useFormik({
@@ -76,9 +70,9 @@ export default observer(function FamilyRelationshipModal(props) {
     }
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     familyRelationship.resetForm();
-    switch(type) {
+    switch (type) {
       case "new":
         setTitle("Add new familyRelationship");
         break;
@@ -95,44 +89,47 @@ export default observer(function FamilyRelationshipModal(props) {
   }, [type, currentFamilyRelationship]);
 
   const body = (
-    <div style={modalStyle} className={classes.paper}>
-      <h2 id="simple-modal-title">{ title }</h2>
+    <div className={classes.paper}>
+      <h2 id="simple-modal-title">{title}</h2>
       <div id="simple-modal-description">
-        <form className={classes.root} noValidate autoComplete="off" onSubmit={familyRelationship.handleSubmit}>
-          <InputLabel htmlFor="name">Name</InputLabel>
-          <Input
+        <form className={classes.modalContent} noValidate autoComplete="off" onSubmit={familyRelationship.handleSubmit}>
+          <InputLabel htmlFor="name">{t('name')}</InputLabel>
+          <TextField
             className={classes.inputStyle}
+            variant="outlined"
+            size="small"
             id="name"
-            label="Name"
             value={familyRelationship.values.name}
             onChange={familyRelationship.handleChange}
           />
           {familyRelationship.errors.name && familyRelationship.touched.name &&
-            <p>{ familyRelationship.errors.name }</p>
+            <p>{familyRelationship.errors.name}</p>
           }
 
-          <InputLabel htmlFor="code">Code</InputLabel>
-          <Input
+          <InputLabel htmlFor="code">{t('code')}</InputLabel>
+          <TextField
             className={classes.inputStyle}
+            variant="outlined"
+            size="small"
             id="code"
-            label="Code"
             value={familyRelationship.values.code}
             onChange={familyRelationship.handleChange}
           />
           {familyRelationship.errors.code && familyRelationship.touched.code &&
-            <p>{ familyRelationship.errors.code }</p>
+            <p>{familyRelationship.errors.code}</p>
           }
 
-          <InputLabel htmlFor="description">Description</InputLabel>
-          <Input
+          <InputLabel htmlFor="description">{t('description')}</InputLabel>
+          <TextField
             className={classes.inputStyle}
+            variant="outlined"
+            size="small"
             id="description"
-            label="Description"
             value={familyRelationship.values.description}
             onChange={familyRelationship.handleChange}
           />
           {familyRelationship.errors.description && familyRelationship.touched.description &&
-            <p>{ familyRelationship.errors.description }</p>
+            <p>{familyRelationship.errors.description}</p>
           }
           <Button
             variant="contained"
@@ -143,10 +140,10 @@ export default observer(function FamilyRelationshipModal(props) {
           </Button>
         </form>
       </div>
-      
+
     </div>
   );
-    
+
   return (
     <>
       <Modal
@@ -159,5 +156,5 @@ export default observer(function FamilyRelationshipModal(props) {
       </Modal>
     </>
   );
-  
+
 })
