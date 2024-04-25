@@ -1,9 +1,10 @@
-import { pagingDepartments, getDepartment, createDepartment, editDepartment, deleteDepartment } from './DepartmentService';
+import { pagingDepartments, pagingAllDepartments, getDepartment, createDepartment, editDepartment, deleteDepartment } from './DepartmentService';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { toast } from 'react-toastify';
 
 export default class DepartmentStore {
   departmentList = [];
+  allDepartmentList = [];
   currentDepartment = {};
   status = 'initial';
   totalElements = 0;
@@ -23,6 +24,27 @@ export default class DepartmentStore {
       let data = await pagingDepartments(searchObject);
       runInAction(() => {
         this.departmentList = data.data.content;
+        this.totalElements = data.data.totalElements;
+        this.totalPages = data.data.totalPages;
+        this.status = 'success';
+      });
+    } catch {
+      runInAction(() => {
+        this.status = "error";
+      });
+    }
+  };
+
+  pagingAllDepartmentsAsync = async (page, rowsPerPage, keyword) => {
+    try {
+      let searchObject = {
+        pageIndex: page,
+        pageSize: rowsPerPage,
+        keyword: keyword,
+      }
+      let data = await pagingAllDepartments(searchObject);
+      runInAction(() => {
+        this.allDepartmentList = data.data.content;
         this.totalElements = data.data.totalElements;
         this.totalPages = data.data.totalPages;
         this.status = 'success';

@@ -66,7 +66,7 @@ export default observer(function SelectParentModal(props) {
   const { t } = useTranslation();
 
   const { departmentStore } = useStore();
-  const { departmentList, currentDepartment } = departmentStore;
+  const { departmentList } = departmentStore;
   const { isShowSelectParentModal, handleCloseSelectParentModal, department } = props;
 
   const [keyword, setKeyword] = useState('');
@@ -85,7 +85,7 @@ export default observer(function SelectParentModal(props) {
   }
 
   useEffect(() => {
-
+    departmentStore.pagingDepartmentsAsync(page, rowsPerPage, keyword);
   }, [isShowSelectParentModal]);
 
   return (

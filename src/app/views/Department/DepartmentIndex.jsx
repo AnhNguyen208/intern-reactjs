@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default observer(function DepartmentIndex() {
   const { departmentStore } = useStore();
-  const { departmentList, currentDepartment } = departmentStore;
+  const { allDepartmentList, currentDepartment } = departmentStore;
 
   const classes = useStyles();
   const [isShowModal, setIsShowModal] = useState(false);
@@ -35,7 +35,7 @@ export default observer(function DepartmentIndex() {
       keyword: "",
     },
     onSubmit: (values) => {
-      departmentStore.pagingDepartmentsAsync(page, rowsPerPage, values.keyword);
+      departmentStore.pagingAllDepartmentsAsync(page, rowsPerPage, values.keyword);
       setPage(1);
     }
   });
@@ -77,11 +77,11 @@ export default observer(function DepartmentIndex() {
   }
 
   function handleUpdateTable() {
-    page === 1 ? departmentStore.pagingDepartmentsAsync(page, rowsPerPage, search.values.keyword) : setPage(1);
+    page === 1 ? departmentStore.pagingAllDepartmentsAsync(page, rowsPerPage, search.values.keyword) : setPage(1);
   }
 
   useEffect(() => {
-    departmentStore.pagingDepartmentsAsync(page, rowsPerPage, search.values.keyword);
+    departmentStore.pagingAllDepartmentsAsync(page, rowsPerPage, search.values.keyword);
   }, [page, rowsPerPage]);
 
   const columns = [
@@ -125,7 +125,7 @@ export default observer(function DepartmentIndex() {
       </div>
       <div className={classes.contentIndex}>
         <GlobitsTabble
-          data={departmentList}
+          data={allDepartmentList}
           columns={columns}
           totalPages={departmentStore.totalPages}
           handleChangePage={handleChangePage}
