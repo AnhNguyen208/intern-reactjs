@@ -10,6 +10,7 @@ import ethnicsRoutes from "./views/Ethnics/EthnicsRoutes";
 import religionRoutes from "./views/Religion/ReligionRoutes";
 import familyRelationshipRoutes from "./views/FamilyRelationship/FamilyRelationshipRoutes"
 import departmentRoutes from "./views/Department/DepartmentRoutes";
+import staffRoutes from "./views/Staff/StaffRoutes";
 import materialRoutes from "./views/material-kit/MaterialRoutes";
 
 const redirectRoute = [
@@ -37,6 +38,7 @@ const routes = [
   ...religionRoutes,
   ...familyRelationshipRoutes,
   ...departmentRoutes,
+  ...staffRoutes,
   ...errorRoute,
   ...materialRoutes,
 ];

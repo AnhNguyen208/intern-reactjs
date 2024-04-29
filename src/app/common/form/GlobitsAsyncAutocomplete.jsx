@@ -36,10 +36,10 @@ const GlobitsAsyncAutocomplete = ({
       }
 
       if (active && response.data) {
-        if (response.data) {
-          setOptions(response.data);
-        } else if (response.data.content) {
-          setOptions(response.data.content);
+        if (response.data.content) {
+          handleOptions(response.data.content);
+        } else if (response.data) {
+          handleOptions(response.data);
         }
       }
     })();
@@ -59,6 +59,18 @@ const GlobitsAsyncAutocomplete = ({
     setFieldValue(name, value ? value : null);
   };
 
+  const handleOptions = (data) => {
+    console.log(data);
+
+    let list = [];
+    data.map((value) => {
+      const { id, name, code, description } = value;
+      list.push({ id, name, code, description})
+    })
+    setOptions(list);
+    console.log(options);
+  }
+
   const configSyncAutocomplete = {
     ...field,
     ...otherProps,
@@ -72,7 +84,7 @@ const GlobitsAsyncAutocomplete = ({
       setOpen(false);
     },
     onChange: handleChange,
-    getOptionSelected: (option, value) => option.id === value.id,
+    // getOptionSelected: (option, value) => option.id === value.id,
     getOptionLabel: (option) =>
       option[displayData ? displayData : "name"]
         ? option[displayData ? displayData : "name"]

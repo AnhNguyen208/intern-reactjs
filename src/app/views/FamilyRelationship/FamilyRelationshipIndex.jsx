@@ -89,6 +89,8 @@ export default observer(function FamilyRelationshipIndex() {
     { title: "Description", field: "description", align: "center" },
   ];
 
+  console.log(familyRelationshipList);
+
   return (
     <>
       <div className={classes.contentIndex}>

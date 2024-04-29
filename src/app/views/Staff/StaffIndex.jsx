@@ -6,7 +6,7 @@ import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import { useFormik } from 'formik';
-import DepartmentModal from './DepartmentModal';
+import StaffModal from './StaffModal';
 import { observer } from "mobx-react";
 import { useStore } from "app/stores";
 import { useTranslation } from "react-i18next";
@@ -19,9 +19,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default observer(function DepartmentIndex() {
-  const { departmentStore } = useStore();
-  const { allDepartmentList, currentDepartment } = departmentStore;
+export default observer(function StaffIndex() {
+  const { staffStore } = useStore();
+  const { staffList, currentStaff } = staffStore;
   const { t } = useTranslation();
 
   const classes = useStyles();
@@ -36,7 +36,7 @@ export default observer(function DepartmentIndex() {
       keyword: "",
     },
     onSubmit: (values) => {
-      departmentStore.pagingAllDepartmentsAsync(page, rowsPerPage, values.keyword);
+      staffStore.pagingStaffAsync(page, rowsPerPage, values.keyword);
       setPage(1);
     }
   });
@@ -50,19 +50,19 @@ export default observer(function DepartmentIndex() {
   }
 
   function handleAddBtn() {
-    departmentStore.clearCurrentDepartment();
+    staffStore.clearCurrentStaff();
     setIsShowModal(true);
     setType("new");
   }
 
   function handleEditBtn({ id }) {
-    departmentStore.getDepartmentAsync(id);
+    staffStore.getStaffAsync(id);
     setIsShowModal(true);
     setType("edit");
   }
 
   function handleDeleteBtn({ id }) {
-    departmentStore.getDepartmentAsync(id);
+    staffStore.getStaffAsync(id);
     setOpenDialog(true);
   }
 
@@ -71,24 +71,23 @@ export default observer(function DepartmentIndex() {
   }
 
   function handleAgreeBtn() {
-    departmentStore.deleteDepartmentAsync(currentDepartment.id).then(() => {
+    staffStore.deleteStaffAsync(currentStaff.id).then(() => {
       handleUpdateTable();
     });
     setOpenDialog(false);
   }
 
   function handleUpdateTable() {
-    page === 1 ? departmentStore.pagingAllDepartmentsAsync(page, rowsPerPage, search.values.keyword) : setPage(1);
+    page === 1 ? staffStore.pagingStaffAsync(page, rowsPerPage, search.values.keyword) : setPage(1);
   }
 
   useEffect(() => {
-    departmentStore.pagingAllDepartmentsAsync(page, rowsPerPage, search.values.keyword);
+    staffStore.pagingStaffAsync(page, rowsPerPage, search.values.keyword);
   }, [page, rowsPerPage]);
 
   const columns = [
-    { title: t('department.name'), field: "name", align: "center" },
-    { title: t('department.code'), field: "code", align: "center" },
-    { title: t('department.description'), field: "description", align: "center" },
+    { title: "Tên", field: "firstName", align: "center" },
+    { title: "Họ", field: "lastName", align: "center" },
   ];
 
   return (
@@ -96,14 +95,14 @@ export default observer(function DepartmentIndex() {
       <div className={classes.contentIndex}>
         <Box display="flex">
           <Box flexGrow={1}>
-            <h2>Department</h2>
+            <h2>{ t('staff.title') }</h2>
           </Box>
           <Box>
             <Button
               variant="outlined"
               onClick={handleAddBtn}
             >
-              Add new department
+              Add new staff
             </Button>
           </Box>
         </Box>
@@ -126,14 +125,14 @@ export default observer(function DepartmentIndex() {
       </div>
       <div className={classes.contentIndex}>
         <GlobitsTabble
-          data={allDepartmentList}
+          data={staffList}
           columns={columns}
-          totalPages={departmentStore.totalPages}
+          totalPages={staffStore.totalPages}
           handleChangePage={handleChangePage}
           setRowsPerPage={setRowsPerPage}
           pageSize={rowsPerPage}
           pageSizeOption={[10, 25, 50, 100]}
-          totalElements={departmentStore.totalElements}
+          totalElements={staffStore.totalElements}
           page={page}
           handleEditBtn={handleEditBtn}
           handleDeleteBtn={handleDeleteBtn}
@@ -143,13 +142,13 @@ export default observer(function DepartmentIndex() {
       <GlobitsConfirmationDialog
         open={openDialog}
         onConfirmDialogClose={handleCloseDialog}
-        text={"This action can't be undone! Do you want to delete this Department?"}
-        title={"Delete Department"}
+        text={"This action can't be undone! Do you want to delete this Staff?"}
+        title={"Delete Staff"}
         agree={"Agree"}
         cancel={"Cancel"}
         onYesClick={handleAgreeBtn}
       />
-      <DepartmentModal
+      <StaffModal
         isShowModal={isShowModal}
         type={type}
         handleCloseModal={handleCloseModal}
