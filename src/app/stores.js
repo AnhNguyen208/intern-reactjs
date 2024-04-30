@@ -5,6 +5,7 @@ import ReligionStore from "./views/Religion/ReligionStore";
 import FamilyRelationshipStore from "./views/FamilyRelationship/FamilyRelationshipStore";
 import DepartmentStore from "./views/Department/DepartmentStore";
 import StaffStore from "./views/Staff/StaffStore";
+import ProjectStore from "./views/Project/ProjectStore";
 
 export const store = {
   countryStore: new CountryStore(),
@@ -13,6 +14,7 @@ export const store = {
   familyRelationshipStore: new FamilyRelationshipStore(),
   departmentStore: new DepartmentStore(),
   staffStore: new StaffStore(),
+  projectStore: new ProjectStore(),
 };
 
 export const StoreContext = createContext(store);

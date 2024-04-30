@@ -11,6 +11,7 @@ import religionRoutes from "./views/Religion/ReligionRoutes";
 import familyRelationshipRoutes from "./views/FamilyRelationship/FamilyRelationshipRoutes"
 import departmentRoutes from "./views/Department/DepartmentRoutes";
 import staffRoutes from "./views/Staff/StaffRoutes";
+import projectRoutes from "./views/Project/ProjectRoutes";
 import materialRoutes from "./views/material-kit/MaterialRoutes";
 
 const redirectRoute = [
@@ -39,6 +40,7 @@ const routes = [
   ...familyRelationshipRoutes,
   ...departmentRoutes,
   ...staffRoutes,
+  ...projectRoutes,
   ...errorRoute,
   ...materialRoutes,
 ];

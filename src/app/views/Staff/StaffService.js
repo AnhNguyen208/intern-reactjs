@@ -27,19 +27,3 @@ export const deleteStaff = (id) => {
   let url = API_PATH + "/" + id;
   return axios.delete(url);
 };
-
-export const checkCode = (id,code) => {
-  const param = { params: { id: id, code: code } };
-  var url = API_PATH + "/checkCode";
-  return axios.get(url, param);
-};
-
-export const getListStaff = () => {
-  var url = API_PATH + "/getListStaff";
-  return axios.get(url);
-};
-
-export const getTreeView = () => {
-  var url = API_PATH_CORE + "/tree/1/10000000";
-  return axios.get(url);
-};

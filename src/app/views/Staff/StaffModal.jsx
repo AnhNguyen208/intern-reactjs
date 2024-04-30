@@ -147,12 +147,12 @@ export default observer(function StaffModal(props) {
       onSubmit={async(values, { resetForm }) => {
         if (values.id === undefined) {
           staffStore.createStaffAsync(values).then(() => {
-            console.log("Value submit:  ", values);
+            // console.log("Value submit:  ", values);
             handleUpdateTable();
           });
         } else {
           staffStore.editStaffAsync(values).then(() => {
-            console.log("Value submit:  ", values);
+            // console.log("Value submit:  ", values);
             handleUpdateTable();
           });
         }
@@ -297,7 +297,14 @@ export default observer(function StaffModal(props) {
                     <>
                       <Button
                         variant="contained"
-                        onClick={() => push({ name: '', email: '' })}
+                        onClick={() => push({
+                          fullName: '',
+                          profession: '',
+                          birthDate: '',
+                          familyRelationship: {},
+                          address: '',
+                          description: '',
+                        })}
                       >
                         <AddIcon/>Thêm mới nhân thân
                       </Button>
@@ -312,7 +319,7 @@ export default observer(function StaffModal(props) {
                           <div className={classes.tableHeader}></div>
                         </div>
                         {props.values.familyRelationships &&
-                          props.values.familyRelationships.map((familyRelationship, index) => (
+                          props.values.familyRelationships.map((value, index) => (
                             <div key={index} style={{ display: 'flex' }}>
                               <Field
                                 name={`familyRelationships.${index}.fullName`}
@@ -334,15 +341,23 @@ export default observer(function StaffModal(props) {
                                 as="select"
                                 style={{ width: "100px", height: "33.6px", border: "1px solid", }}
                                 onChange={event => handleFamilyRelationship(props, event, index) }
-                                value={props.values.familyRelationships[index].familyRelationship?.name}
                               >
-                                <option>Chọn quan hệ</option>
                                 {familyRelationshipList.map((item, pos) => {
-                                  return (
-                                    <option key={pos} value={pos}>
-                                      {item.name}
-                                    </option>
-                                  );
+                                  if (value.familyRelationship !== null && value.familyRelationship.id === item.id) {
+                                    console.log("index: ", index);
+                                    console.log("seleted: ", value.familyRelationship.name);
+                                    return (
+                                      <option key={pos} value={pos} selected>
+                                        {item.name}
+                                      </option>
+                                    );
+                                  } else {
+                                    return (
+                                      <option key={pos} value={pos}>
+                                        {item.name}
+                                      </option>
+                                    );
+                                  }
                                 })}
                               </Field>                                
                               <Field

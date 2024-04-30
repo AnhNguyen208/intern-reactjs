@@ -1,10 +1,10 @@
-import { pagingStaff, getStaff, createStaff, editStaff, deleteStaff } from './StaffService';
+import { pagingProject, getProject, createProject, editProject, deleteProject } from './ProjectService';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { toast } from 'react-toastify';
 
-export default class StaffStore {
-  staffList = [];
-  currentStaff = {};
+export default class ProjectStore {
+  projectList = [];
+  currentProject = {};
   status = 'initial';
   totalElements = 0;
   totalPages = 0;  
@@ -13,16 +13,16 @@ export default class StaffStore {
     makeAutoObservable(this);
   }
 
-  pagingStaffAsync = async (page, rowsPerPage, keyword) => {
+  pagingProjectAsync = async (page, rowsPerPage, keyword) => {
     try {
       let searchObject = {
         pageIndex: page,
         pageSize: rowsPerPage,
         keyword: keyword,
       }
-      let data = await pagingStaff(searchObject);
+      let data = await pagingProject(searchObject);
       runInAction(() => {
-        this.staffList = data.data.content;
+        this.projectList = data.data.content;
         this.totalElements = data.data.totalElements;
         this.totalPages = data.data.totalPages;
         this.status = 'success';
@@ -34,11 +34,11 @@ export default class StaffStore {
     }
   };
 
-  getStaffAsync = async (id) => {
+  getProjectAsync = async (id) => {
     try {
-      const { data } = await getStaff(id);
+      const { data } = await getProject(id);
       runInAction(() => {
-        this.currentStaff = data;
+        this.currentProject = data;
         this.status = 'success';
       });
     } catch {
@@ -48,58 +48,58 @@ export default class StaffStore {
     }
   };
 
-  createStaffAsync = async (staff) => {
+  createProjectAsync = async (project) => {
     try {
-      const res = await createStaff(staff);
+      const res = await createProject(project);
       if (res.status === 200) {
         runInAction(() => {
           this.status = "success";
-          toast.success("A Staff is created succeed!");
+          toast.success("A Project is created succeed!");
         })
       } 
     } catch (error) {
       runInAction(() => {
         this.status = "error";
-        toast.error("Error when creating new staff");
+        toast.error("Error when creating new project");
       });
     }
   };
 
-  editStaffAsync = async (staff) => { 
+  editProjectAsync = async (project) => { 
     try {
-      const res = await editStaff(staff);
+      const res = await editProject(project);
       if (res.status === 200) {
         runInAction(() => {
           this.status = "success";
-          toast.success("Edit staff successfully!");
+          toast.success("Edit project successfully!");
         })
       } 
     } catch (error) {
       runInAction(() => {
         this.status = "error";
-        toast.error("Error when editing staff");
+        toast.error("Error when editing project");
       });
     }
   };
 
-  deleteStaffAsync = async (id) => { 
+  deleteProjectAsync = async (id) => { 
     try {
-      const res = await deleteStaff(id);
+      const res = await deleteProject(id);
       if (res.status === 200) {
         runInAction(() => {
           this.status = "success";
-          toast.success("Delete staff successfully!!!");
+          toast.success("Delete project successfully!!!");
         })
       } 
     } catch (error) {
       runInAction(() => {
         this.status = "error";
-        toast.error("Error when deleting staff");
+        toast.error("Error when deleting project");
       });
     }
   };
 
-  clearCurrentStaff = () => {
-    this.currentStaff = {};
+  clearCurrentProject = () => {
+    this.currentProject = {};
   }
 }
