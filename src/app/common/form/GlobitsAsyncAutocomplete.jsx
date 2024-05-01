@@ -59,13 +59,14 @@ const GlobitsAsyncAutocomplete = ({
     setFieldValue(name, value ? value : null);
   };
 
-  const handleOptions = (data) => {
-    console.log(data);
+  function removeEmpty(obj) {
+    return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null));
+  }
 
+  const handleOptions = (data) => {
     let list = [];
     data.map((value) => {
-      const { id, name, code, description } = value;
-      list.push({ id, name, code, description})
+      list.push(removeEmpty(value));
     })
     setOptions(list);
     console.log(options);

@@ -54,6 +54,12 @@ export const navigations = [
         icon: "remove",
         isVisible: true,
       },
+      {
+        name: "Thời gian biểu",
+        path: ConstantList.ROOT_PATH + "category/timeSheet",
+        icon: "remove",
+        isVisible: true,
+      },
     ],
   },
   

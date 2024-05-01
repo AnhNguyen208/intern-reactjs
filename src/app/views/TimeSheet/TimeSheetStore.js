@@ -1,10 +1,10 @@
-import { pagingProject, getProject, createProject, editProject, deleteProject } from './ProjectService';
+import { pagingTimeSheet, getTimeSheet, createTimeSheet, editTimeSheet, deleteTimeSheet } from './TimeSheetService';
 import { makeAutoObservable, runInAction } from 'mobx';
 import { toast } from 'react-toastify';
 
-export default class ProjectStore {
-  projectList = [];
-  currentProject = {};
+export default class TimeSheetStore {
+  timeSheetList = [];
+  currentTimeSheet = {};
   status = 'initial';
   totalElements = 0;
   totalPages = 0;  
@@ -13,16 +13,16 @@ export default class ProjectStore {
     makeAutoObservable(this);
   }
 
-  pagingProjectAsync = async (page, rowsPerPage, keyword) => {
+  pagingTimeSheetAsync = async (page, rowsPerPage, projectId) => {
     try {
       let searchObject = {
         pageIndex: page,
         pageSize: rowsPerPage,
-        keyword: keyword,
+        projectId: projectId,
       }
-      let data = await pagingProject(searchObject);
+      let data = await pagingTimeSheet(searchObject);
       runInAction(() => {
-        this.projectList = data.data.content;
+        this.timeSheetList = data.data.content;
         this.totalElements = data.data.totalElements;
         this.totalPages = data.data.totalPages;
         this.status = 'success';
@@ -34,11 +34,11 @@ export default class ProjectStore {
     }
   };
 
-  getProjectAsync = async (id) => {
+  getTimeSheetAsync = async (id) => {
     try {
-      const { data } = await getProject(id);
+      const { data } = await getTimeSheet(id);
       runInAction(() => {
-        this.currentProject = data;
+        this.currentTimeSheet = data;
         this.status = 'success';
       });
     } catch {
@@ -48,62 +48,58 @@ export default class ProjectStore {
     }
   };
 
-  createProjectAsync = async (project) => {
+  createTimeSheetAsync = async (timeSheet) => {
     try {
-      const res = await createProject(project);
+      const res = await createTimeSheet(timeSheet);
       if (res.status === 200) {
         runInAction(() => {
           this.status = "success";
-          toast.success("A Project is created succeed!");
+          toast.success("A TimeSheet is created succeed!");
         })
       } 
     } catch (error) {
       runInAction(() => {
         this.status = "error";
-        toast.error("Error when creating new project");
+        toast.error("Error when creating new timeSheet");
       });
     }
   };
 
-  editProjectAsync = async (project) => { 
+  editTimeSheetAsync = async (timeSheet) => { 
     try {
-      const res = await editProject(project);
+      const res = await editTimeSheet(timeSheet);
       if (res.status === 200) {
         runInAction(() => {
           this.status = "success";
-          toast.success("Edit project successfully!");
+          toast.success("Edit timeSheet successfully!");
         })
       } 
     } catch (error) {
       runInAction(() => {
         this.status = "error";
-        toast.error("Error when editing project");
+        toast.error("Error when editing timeSheet");
       });
     }
   };
 
-  deleteProjectAsync = async (id) => { 
+  deleteTimeSheetAsync = async (id) => { 
     try {
-      const res = await deleteProject(id);
+      const res = await deleteTimeSheet(id);
       if (res.status === 200) {
         runInAction(() => {
           this.status = "success";
-          toast.success("Delete project successfully!!!");
+          toast.success("Delete timeSheet successfully!!!");
         })
       } 
     } catch (error) {
       runInAction(() => {
         this.status = "error";
-        toast.error("Error when deleting project");
+        toast.error("Error when deleting timeSheet");
       });
     }
   };
 
-  clearCurrentProject = () => {
-    this.currentProject = {};
-  }
-
-  setCurrentProject = (project) => {
-    this.currentProject = project;
+  clearCurrentTimeSheet = () => {
+    this.currentTimeSheet = {};
   }
 }

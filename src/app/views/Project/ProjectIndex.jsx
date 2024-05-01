@@ -96,7 +96,7 @@ export default observer(function ProjectIndex() {
       <div className={classes.contentIndex}>
         <Box display="flex">
           <Box flexGrow={1}>
-            <h2>{ t('project.title') }</h2>
+            <h2>Dự án</h2>
           </Box>
           <Box>
             <Button
