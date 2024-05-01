@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
 import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
-import IconButton from '@material-ui/core/IconButton';
-import { useFormik } from 'formik';
 import CountryModal from './CountryModal';
 import { observer } from "mobx-react";
 import { useStore } from "app/stores";
+import { useTranslation } from "react-i18next";
 import GlobitsTabble from "../../common/GlobitsTable";
 import GlobitsConfirmationDialog from "../../common/GlobitsConfirmationDialog";
+import GlobitsSearchInput from 'app/common/GlobitsSearchInput';
 
 const useStyles = makeStyles((theme) => ({
     contentIndex: {
@@ -19,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default observer(function CountryIndex() {
+    const { t } = useTranslation();
     const { countryStore } = useStore();
     const { countryList, currentCountry } = countryStore;
 
@@ -29,17 +28,7 @@ export default observer(function CountryIndex() {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [openDialog, setOpenDialog] = useState(false);
 
-    const search = useFormik({
-        initialValues: {
-            keyword: "",
-        },
-        onSubmit: (values) => {
-            countryStore.pagingCountriesAsync(page, rowsPerPage, values.keyword);
-            setPage(1);
-        }
-    });
-
-    const handleChangePage = (event, newPage) => {
+    function handleChangePage(event, newPage) {
         setPage(newPage);
     };
 
@@ -76,17 +65,22 @@ export default observer(function CountryIndex() {
     }
 
     function handleUpdateTable() {
-        page === 1 ? countryStore.pagingCountriesAsync(page, rowsPerPage, search.values.keyword) : setPage(1);
+        page === 1 ? countryStore.pagingCountriesAsync(page, rowsPerPage, "") : setPage(1);
+    }
+
+    function handleSearch({ keyword }) {
+        countryStore.pagingCountriesAsync(page, rowsPerPage, keyword);
+        setPage(1);
     }
 
     useEffect(() => {
-        countryStore.pagingCountriesAsync(page, rowsPerPage, search.values.keyword);
+        countryStore.pagingCountriesAsync(page, rowsPerPage, "");
     }, [page, rowsPerPage]);
 
     const columns = [
-        { title: "Name", field: "name", align : "center" },
-        { title: "Code", field: "code", align: "center" },
-        { title: "Description", field: "description", align: "center" },
+        { title: t('country.name'), field: "name", align : "center" },
+        { title: t('country.code'), field: "code", align: "center" },
+        { title: t('country.description'), field: "description", align: "center" },
     ];
 
     return (
@@ -94,33 +88,22 @@ export default observer(function CountryIndex() {
             <div className={classes.contentIndex}>
                 <Box display="flex">
                     <Box flexGrow={1}>
-                        <h2>Country</h2>
+                        <h2>{ t('country.title') }</h2>
                     </Box>
                     <Box>
                         <Button
                             variant="outlined"
                             onClick={handleAddBtn}
                         >
-                            Add new country
+                            Thêm quốc gia mới
                         </Button>
                     </Box>
                 </Box>
             </div>
             <div className={classes.contentIndex}>
-                <form onSubmit={search.handleSubmit}>
-                    <TextField
-                        id="keyword"
-                        className="text"
-                        label="Enter keyword"
-                        variant="outlined"
-                        placeholder="Search..."
-                        size="small"
-                        onChange={search.handleChange}
-                    />
-                    <IconButton type="submit" aria-label="search">
-                        <SearchIcon style={{ fill: "blue" }} />
-                    </IconButton>
-                </form>
+                <GlobitsSearchInput
+                    search={handleSearch}
+                />
             </div>
             <div className={classes.contentIndex}>
                 <GlobitsTabble

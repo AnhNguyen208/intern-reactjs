@@ -41,7 +41,7 @@ export default observer(function ProjectIndex() {
     }
   });
 
-  const handleChangePage = (event, newPage) => {
+  function handleChangePage(event, newPage) {
     setPage(newPage);
   };
 

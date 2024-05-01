@@ -1,77 +1,131 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
-import TextField from '@material-ui/core/TextField';
 import InputLabel from '@material-ui/core/InputLabel';
-import { useFormik } from 'formik';
+import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { observer } from "mobx-react";
 import { useStore } from "app/stores";
-import { useTranslation } from "react-i18next";
+import ModalComponent from 'app/common/ModalComponent';
+import GlobitsTextField from 'app/common/form/GlobitsTextField';
+import FamilyRelationshipField from './FamilyRelationshipField';
 
 const useStyles = makeStyles((theme) => ({
-  paper: {
-    position: 'absolute',
-    top: "50%",
-    left: "50%",
-    width: 500,
-    transform: "translate(-50%, -50%)",
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
-  inputStyle: {
-    width: 400,
-  },
-  modalContent: {
-    backgroundColor: "#fefefe",
-    margin: "10% auto",
-    '& > *': {
-      margin: theme.spacing(1),
+  divFormStyles: {
+    display: 'flex',
+    flexDirection: 'column',
+    margin: "5px",
+    '& label': {
+      marginTop: '10px',
+      marginBottom: "5px",
     },
-  }
+  },
+  divFormStyles1: {
+    marginTop: "15px",
+    marginLeft: '5px',
+    '& button': {
+      background: 'rgb(1,192,200)',
+      color: 'rgb(255, 255, 255)',
+    },
+  },
+  margin: {
+    marginLeft: '10px',
+    marginRight: '10px'
+  },
+  tableHeader: {
+    padding: "10px",
+    width: "200px",
+    border: "1px solid",
+  },
+  cellTable: {
+    width: "194.5px",
+    height: "30px",
+    border: "1px solid",
+  },
+  select: {
+    minWidth: '160px', maxHeight: '40px'
+  },
 }));
-export default observer(function FamilyRelationshipModal(props) {
-  const classes = useStyles();
-  const { t } = useTranslation();
 
+export default observer(function FamilyRelationshipModal(props) {  
   const { familyRelationshipStore } = useStore();
-  const { currentFamilyRelationship } = familyRelationshipStore;
+
+  const classes = useStyles();
   const { isShowModal, type, handleCloseModal, handleUpdateTable } = props;
 
   const [title, setTitle] = useState("");
 
-  const familyRelationship = useFormik({
-    initialValues: {
-      id: '',
-      name: '',
-      code: '',
-      description: '',
-    },
-    validationSchema: Yup.object({
-      name: Yup.string().required('You must fill the familyRelationship name'),
-      code: Yup.string().required('You must fill the familyRelationship code'),
-      description: Yup.string().required('You must fill the familyRelationship description'),
-    }),
-    onSubmit: async (values) => {
-      if (values.id === undefined || values.id === '') {
-        familyRelationshipStore.createFamilyRelationshipAsync(values).then(() => {
-          handleUpdateTable();
-        });
-      } else {
-        familyRelationshipStore.editFamilyRelationshipAsync(values).then(() => {
-          handleUpdateTable();
-        });
-      }
-      familyRelationship.resetForm();
-      handleCloseModal();
-    }
-  });
+  const form = (
+    <Formik
+      initialValues={{
+        id: '',
+        name: '',
+        code: '',
+        description: '',
+      }}
+      validationSchema={Yup.object({
+        name: Yup.string().required('You must fill the country name'),
+        code: Yup.string().required('You must fill the country code'),
+        description: Yup.string().required('You must fill the country description'),
+      })}
+      onSubmit={async (values, { resetForm }) => {
+        if (values.id === undefined || values.id === '') {
+          familyRelationshipStore.createFamilyRelationshipAsync(values).then(() => {
+            handleUpdateTable();
+          });
+        } else {
+          familyRelationshipStore.editFamilyRelationshipAsync(values).then(() => {
+            handleUpdateTable();
+          });
+        }
+        resetForm();
+        handleCloseModal();
+      }}
+    >
+      {props => (
+        <>
+          <form noValidate autoComplete="off" onSubmit={props.handleSubmit}>
+            <FamilyRelationshipField />
+            <div className={classes.divFormStyles}>
+              <div style={{ display: 'flex' }}>
+                <div className={classes.margin}>
+                  <InputLabel htmlFor="name">Tên</InputLabel>
+                  <GlobitsTextField
+                    name={"name"}
+                  />
+                </div>
+                <div className={classes.margin}>
+                  <InputLabel htmlFor="code">Mã</InputLabel>
+                  <GlobitsTextField
+                    name={"code"}
+                  />
+                </div>
+              </div>
+              <div style={{ display: 'flex' }}>
+                <div className={classes.margin}>
+                  <InputLabel htmlFor="description">Mô tả</InputLabel>
+                  <GlobitsTextField
+                    name={"description"}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={classes.divFormStyles1}>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                Xác nhận
+              </Button>
+            </div>
+          </form>
+        </>
+      )}
+    </Formik>
+  );
 
   useEffect(() => {
-    familyRelationship.resetForm();
     switch (type) {
       case "new":
         setTitle("Add new familyRelationship");
@@ -82,78 +136,16 @@ export default observer(function FamilyRelationshipModal(props) {
       default:
         setTitle("Add new familyRelationship");
     }
-    const { id, name, code, description } = currentFamilyRelationship;
-    familyRelationship.setValues({
-      id, name, code, description
-    });
-  }, [type, currentFamilyRelationship]);
-
-  const body = (
-    <div className={classes.paper}>
-      <h2 id="simple-modal-title">{title}</h2>
-      <div id="simple-modal-description">
-        <form className={classes.modalContent} noValidate autoComplete="off" onSubmit={familyRelationship.handleSubmit}>
-          <InputLabel htmlFor="name">{t('name')}</InputLabel>
-          <TextField
-            className={classes.inputStyle}
-            variant="outlined"
-            size="small"
-            id="name"
-            value={familyRelationship.values.name}
-            onChange={familyRelationship.handleChange}
-          />
-          {familyRelationship.errors.name && familyRelationship.touched.name &&
-            <p>{familyRelationship.errors.name}</p>
-          }
-
-          <InputLabel htmlFor="code">{t('code')}</InputLabel>
-          <TextField
-            className={classes.inputStyle}
-            variant="outlined"
-            size="small"
-            id="code"
-            value={familyRelationship.values.code}
-            onChange={familyRelationship.handleChange}
-          />
-          {familyRelationship.errors.code && familyRelationship.touched.code &&
-            <p>{familyRelationship.errors.code}</p>
-          }
-
-          <InputLabel htmlFor="description">{t('description')}</InputLabel>
-          <TextField
-            className={classes.inputStyle}
-            variant="outlined"
-            size="small"
-            id="description"
-            value={familyRelationship.values.description}
-            onChange={familyRelationship.handleChange}
-          />
-          {familyRelationship.errors.description && familyRelationship.touched.description &&
-            <p>{familyRelationship.errors.description}</p>
-          }
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-          >
-            Submit
-          </Button>
-        </form>
-      </div>
-
-    </div>
-  );
+  }, [type]);
 
   return (
     <>
-      <Modal
-        open={isShowModal}
-        onClose={handleCloseModal}
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
-      >
-        {body}
-      </Modal>
+      <ModalComponent
+        handleCloseModal={handleCloseModal}
+        isShowModal={isShowModal}
+        title={title}
+        form={form}
+      />
     </>
   );
 

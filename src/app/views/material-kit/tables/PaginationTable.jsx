@@ -80,7 +80,7 @@ const PaginationTable = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [page, setPage] = React.useState(0);
 
-  const handleChangePage = (event, newPage) => {
+  function handleChangePage(event, newPage) {
     setPage(newPage);
   };
 

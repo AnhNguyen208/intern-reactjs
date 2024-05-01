@@ -41,7 +41,7 @@ export default observer(function StaffIndex() {
     }
   });
 
-  const handleChangePage = (event, newPage) => {
+  function handleChangePage(event, newPage) {
     setPage(newPage);
   };
 
@@ -95,7 +95,7 @@ export default observer(function StaffIndex() {
       <div className={classes.contentIndex}>
         <Box display="flex">
           <Box flexGrow={1}>
-            <h2>{ t('staff.title') }</h2>
+            <h2>{t('staff.title')}</h2>
           </Box>
           <Box>
             <Button

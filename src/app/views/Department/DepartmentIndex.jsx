@@ -41,7 +41,7 @@ export default observer(function DepartmentIndex() {
     }
   });
 
-  const handleChangePage = (event, newPage) => {
+  function handleChangePage(event, newPage) {
     setPage(newPage);
   };
 

@@ -39,7 +39,7 @@ export default observer(function EthnicsIndex() {
     }
   });
 
-  const handleChangePage = (event, newPage) => {
+  function handleChangePage(event, newPage) {
     setPage(newPage);
   };
 

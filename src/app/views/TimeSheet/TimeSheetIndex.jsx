@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 export default observer(function TimeSheetIndex() {
   const { timeSheetStore, projectStore } = useStore();
   const { timeSheetList, currentTimeSheet } = timeSheetStore;
-  const { projectList, currentProject } = projectStore; 
+  const { projectList, currentProject } = projectStore;
   const { t } = useTranslation();
 
   const classes = useStyles();
@@ -51,7 +51,7 @@ export default observer(function TimeSheetIndex() {
     }
   });
 
-  const handleChangePage = (event, newPage) => {
+  function handleChangePage(event, newPage) {
     setPage(newPage);
   };
 
@@ -145,7 +145,7 @@ export default observer(function TimeSheetIndex() {
                   value={value.id}
                   alignItems="center"
                   onClick={() => handleProjectSelected(value)}
-                  selected={value.id === currentProject.id ? true : false} 
+                  selected={value.id === currentProject.id ? true : false}
                 >
                   {value.name}
                 </MenuItem>

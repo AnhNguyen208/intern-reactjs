@@ -39,7 +39,7 @@ export default observer(function FamilyRelationshipIndex() {
     }
   });
 
-  const handleChangePage = (event, newPage) => {
+  function handleChangePage(event, newPage) {
     setPage(newPage);
   };
 
