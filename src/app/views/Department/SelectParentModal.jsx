@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import SearchIcon from '@material-ui/icons/Search';
 import {
@@ -16,10 +17,20 @@ import { useStore } from "app/stores";
 import { useTranslation } from "react-i18next";
 import GlobitsPagination from "../../common/GlobitsPagination";
 import ModalComponent from 'app/common/ModalComponent';
-import { useFormikContext } from "formik";
+
+const useStyles = makeStyles((theme) => ({
+  headerStyle: {
+    backgroundColor: "rgb(1, 192, 200)",
+    position: "sticky",
+    "& th": {
+      color: "#fff" 
+    }
+  },
+}));
 
 export default observer(function SelectParentModal(props) {
   const { t } = useTranslation();
+  const classes = useStyles();
 
   const { departmentStore } = useStore();
   const { departmentList } = departmentStore;
@@ -50,7 +61,6 @@ export default observer(function SelectParentModal(props) {
         <TextField
           id="keyword"
           className="text"
-          label="Enter keyword"
           variant="outlined"
           placeholder="Search..."
           size="small"
@@ -64,7 +74,7 @@ export default observer(function SelectParentModal(props) {
       <div className="w-100 overflow-auto">
         <Table style={{ whiteSpace: "pre" }}>
           <TableHead>
-            <TableRow>
+            <TableRow className={classes.headerStyle}>
               <TableCell className="px-0" align='center'>Chọn</TableCell>
               <TableCell className="px-0" align='center'>{t('department.name')}</TableCell>
               <TableCell className="px-0" align='center'>{t('department.code')}</TableCell>

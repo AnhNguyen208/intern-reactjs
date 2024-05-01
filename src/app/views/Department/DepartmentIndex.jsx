@@ -113,7 +113,6 @@ export default observer(function DepartmentIndex() {
           <TextField
             id="keyword"
             className="text"
-            label="Enter keyword"
             variant="outlined"
             placeholder="Search..."
             size="small"

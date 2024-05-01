@@ -9,9 +9,17 @@ import { useFormik } from 'formik';
 import TimeSheetModal from './TimeSheetModal';
 import { observer } from "mobx-react";
 import { useStore } from "app/stores";
-import { useTranslation } from "react-i18next";
-import GlobitsTabble from "../../common/GlobitsTable";
+import {
+  Table,
+  TableHead,
+  TableCell,
+  TableBody,
+  TableRow,
+} from "@material-ui/core";
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import GlobitsConfirmationDialog from "../../common/GlobitsConfirmationDialog";
+import GlobitsPagination from "../../common/GlobitsPagination";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -26,13 +34,19 @@ const useStyles = makeStyles((theme) => ({
       paddingTop: "5px",
     }
   },
+  headerStyle: {
+    backgroundColor: "rgb(1, 192, 200)",
+    position: "sticky",
+    "& th": {
+      color: "#fff"
+    }
+  },
 }));
 
 export default observer(function TimeSheetIndex() {
   const { timeSheetStore, projectStore } = useStore();
   const { timeSheetList, currentTimeSheet } = timeSheetStore;
   const { projectList, currentProject } = projectStore;
-  const { t } = useTranslation();
 
   const classes = useStyles();
   const [isShowModal, setIsShowModal] = useState(false);
@@ -100,13 +114,6 @@ export default observer(function TimeSheetIndex() {
     projectStore.pagingProjectAsync(1, 100, search.values.keyword);
   }, [page, rowsPerPage, currentProject]);
 
-  const columns = [
-    { title: "Công việc", field: "description", align: "center" },
-    // { title: "Thời gian", field: "lastName", align: "center" },
-    { title: "Mức độ ưu tiên", field: "priority", align: "center" },
-    // { title: "Người thực hiện", field: "timeSheetStaff", align: "center" },
-  ];
-
   return (
     <>
       <div className={classes.container}>
@@ -116,7 +123,7 @@ export default observer(function TimeSheetIndex() {
           </div>
           <Button
             color="secondary"
-            onClick={() => search.resetForm()}
+            onClick={() => timeSheetStore.pagingTimeSheetAsync(page, rowsPerPage)}
           >
             Tất cả
           </Button>
@@ -157,19 +164,59 @@ export default observer(function TimeSheetIndex() {
           </Button>
         </div>
         <div className={classes.contentIndex}>
-          <GlobitsTabble
-            data={timeSheetList}
-            columns={columns}
-            totalPages={timeSheetStore.totalPages}
-            handleChangePage={handleChangePage}
-            setRowsPerPage={setRowsPerPage}
-            pageSize={rowsPerPage}
-            pageSizeOption={[10, 25, 50, 100]}
-            totalElements={timeSheetStore.totalElements}
-            page={page}
-            handleEditBtn={handleEditBtn}
-            handleDeleteBtn={handleDeleteBtn}
-          />
+          <div className="w-100 overflow-auto">
+            <Table style={{ whiteSpace: "pre" }}>
+              <TableHead>
+                <TableRow className={classes.headerStyle}>
+                  <TableCell className="px-0" align='center'>Hành động</TableCell>
+                  <TableCell className="px-0" align='center'>Công việc</TableCell>
+                  <TableCell className="px-0" align='center'>Thời gian</TableCell>
+                  <TableCell className="px-0" align='center'>Mức độ ưu tiên</TableCell>
+                  <TableCell className="px-0" align='center'>Người thực hiện</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {timeSheetList.map((value, index) => (
+                  <TableRow key={index}>
+                    <TableCell className="px-0" align='center'>
+                      <EditIcon color='primary' onClick={ () => handleEditBtn(value) } />
+                      <DeleteIcon color='secondary' onClick={ () => handleDeleteBtn(value) } />
+                    </TableCell>
+                    <TableCell className="px-0 capitalize" align="center">
+                      {value.description}
+                    </TableCell>
+                    <TableCell className="px-0 capitalize" align="center">
+                      Thời gian bắt đầu: {(new Date(value.startTime)).toLocaleString()}
+                      <br/>
+                      Thời gian kết thúc: {(new Date(value.endTime)).toLocaleString()}
+
+                    </TableCell>
+                    <TableCell className="px-0 capitalize" align="center">
+                      {value.priority}
+                    </TableCell>
+                    <TableCell className="px-0 capitalize" align="center">
+                      <ul>
+                      {value.timeSheetStaff?.map((item, index) => {
+                        return (
+                          <li>{item.lastName + " " + item.firstName}</li>
+                        );
+                        }) }
+                      </ul>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <GlobitsPagination
+              totalPages={timeSheetStore.totalPages}
+              handleChangePage={handleChangePage}
+              setRowsPerPage={setRowsPerPage}
+              pageSize={rowsPerPage}
+              pageSizeOption={[10, 25, 50, 100]}
+              totalElements={timeSheetStore.totalElements}
+              page={page}
+            />
+          </div>
         </div>
       </div>
 

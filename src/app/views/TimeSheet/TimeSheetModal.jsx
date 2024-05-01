@@ -7,7 +7,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { Formik, Field, FieldArray } from 'formik';
 import { useStore } from "app/stores";
 import { observer } from "mobx-react";
-import { useTranslation } from "react-i18next";
 import TimeSheetField from './TimeSheetField';
 import GlobitsSelectInput from 'app/common/form/GlobitsSelectInput';
 import GlobitsTextField from 'app/common/form/GlobitsTextField';
@@ -54,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default observer(function TimeSheetModal(props) {
-  const { t } = useTranslation();
   const { projectStore, timeSheetStore } = useStore();
   const { currentProject } = projectStore;
 
@@ -196,7 +194,7 @@ export default observer(function TimeSheetModal(props) {
                                 style={{ width: "200px", height: "33.6px", border: "1px solid", }}
                                 onChange={event => handleEmployee(props, event, index)}
                               >
-                                {props.values.timeSheetStaff.map((item, pos) => {
+                                {props.values.timeSheetStaff?.map((item, pos) => {
                                   if (value.employee !== null && value.employee.id === item.id) {
                                     return (
                                       <option key={pos} value={pos} selected>

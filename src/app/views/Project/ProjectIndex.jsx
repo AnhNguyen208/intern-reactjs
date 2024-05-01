@@ -9,7 +9,6 @@ import { useFormik } from 'formik';
 import ProjectModal from './ProjectModal';
 import { observer } from "mobx-react";
 import { useStore } from "app/stores";
-import { useTranslation } from "react-i18next";
 import GlobitsTabble from "../../common/GlobitsTable";
 import GlobitsConfirmationDialog from "../../common/GlobitsConfirmationDialog";
 
@@ -22,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
 export default observer(function ProjectIndex() {
   const { projectStore } = useStore();
   const { projectList, currentProject } = projectStore;
-  const { t } = useTranslation();
 
   const classes = useStyles();
   const [isShowModal, setIsShowModal] = useState(false);
@@ -113,7 +111,6 @@ export default observer(function ProjectIndex() {
           <TextField
             id="keyword"
             className="text"
-            label="Enter keyword"
             variant="outlined"
             placeholder="Search..."
             size="small"
