@@ -93,7 +93,6 @@ export default observer(function TimeSheetIndex() {
 
   function handleProjectSelected(project) {
     projectStore.setCurrentProject(project);
-    console.log("Project selected: ", currentProject);
   }
 
   useEffect(() => {
@@ -102,10 +101,10 @@ export default observer(function TimeSheetIndex() {
   }, [page, rowsPerPage, currentProject]);
 
   const columns = [
-    { title: "Công việc", field: "firstName", align: "center" },
-    { title: "Thời gian", field: "lastName", align: "center" },
-    { title: "Mức độ ưu tiên", field: "lastName", align: "center" },
-    { title: "Người thực hiện", field: "lastName", align: "center" },
+    { title: "Công việc", field: "description", align: "center" },
+    // { title: "Thời gian", field: "lastName", align: "center" },
+    { title: "Mức độ ưu tiên", field: "priority", align: "center" },
+    // { title: "Người thực hiện", field: "timeSheetStaff", align: "center" },
   ];
 
   return (
@@ -134,9 +133,6 @@ export default observer(function TimeSheetIndex() {
               <SearchIcon style={{ fill: "blue" }} />
             </IconButton>
           </form>
-          {/* <MenuItem key="1" value="2" selected="selected">
-            3
-          </MenuItem> */}
           <div>
             {projectList.map((value, index) => {
               return (

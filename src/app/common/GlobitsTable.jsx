@@ -27,6 +27,8 @@ export default function GlobitsTable(props) {
     selection,
     handleSelectList,
   } = props;
+  
+  console.log(data["timeSheetStaff"]);
 
   return (
     <div className={classes.globitsTableWraper}>
@@ -45,7 +47,7 @@ export default function GlobitsTable(props) {
           toolbar: false,
           maxBodyHeight: "100vh",
           headerStyle: {
-            backgroundColor: "#01579b",
+            backgroundColor: "rgb(1, 192, 200)",
             color: "#fff",
             position: "sticky",
           },
@@ -70,12 +72,6 @@ export default function GlobitsTable(props) {
             },
             onClick: (event, rowData) => props.handleDeleteBtn(rowData)
           },
-          {
-            icon: 'add',
-            tooltip: 'Add User',
-            isFreeAction: true,
-            onClick: (event) => alert("You want to add a new row")
-          }
         ]}
         onSelectionChange={(rows) => {
           handleSelectList(rows);

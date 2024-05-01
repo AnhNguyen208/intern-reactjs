@@ -87,7 +87,7 @@ export default observer(function TimeSheetModal(props) {
         description: '',
         details: [],
       }}
-      onSubmit={async(values, { resetForm }) => {
+      onSubmit={async (values, { resetForm }) => {
         if (values.id === undefined) {
           timeSheetStore.createTimeSheetAsync(values).then(() => {
             console.log("Value submit:  ", values);
@@ -135,14 +135,14 @@ export default observer(function TimeSheetModal(props) {
                   <InputLabel htmlFor="startTime">Giờ bắt đầu</InputLabel>
                   <GlobitsTextField
                     name={"startTime"}
-                    type={"time"}
+                    type={"datetime-local"}
                   />
                 </div>
                 <div className={classes.margin}>
                   <InputLabel htmlFor="endTime">Giờ kết thúc</InputLabel>
                   <GlobitsTextField
                     name={"endTime"}
-                    type={"time"}
+                    type={"datetime-local"}
                   />
                 </div>
               </div>
@@ -190,11 +190,11 @@ export default observer(function TimeSheetModal(props) {
                                 type="text"
                                 className={classes.cellTable}
                               />
-                              <Field
+                              <select
+                                id={`details.${index}.employee`}
                                 name={`details.${index}.employee`}
-                                as="select"
                                 style={{ width: "200px", height: "33.6px", border: "1px solid", }}
-                                onChange={event => handleEmployee(props, event, index) }
+                                onChange={event => handleEmployee(props, event, index)}
                               >
                                 {props.values.timeSheetStaff.map((item, pos) => {
                                   if (value.employee !== null && value.employee.id === item.id) {
@@ -211,7 +211,7 @@ export default observer(function TimeSheetModal(props) {
                                     );
                                   }
                                 })}
-                              </Field>                                
+                              </select>
                               <div
                                 style={{ width: "200px", height: "33px", border: "1px solid", }}
                               >

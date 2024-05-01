@@ -292,16 +292,14 @@ export default observer(function StaffModal(props) {
                                 type="date"
                                 style={{ width: "97.5px", height: "32px", border: "1px solid", }}
                               />
-                              <Field
+                              <select
+                                id={`familyRelationships.${index}.familyRelationship`}
                                 name={`familyRelationships.${index}.familyRelationship`}
-                                as="select"
                                 style={{ width: "100px", height: "33.6px", border: "1px solid", }}
-                                onChange={event => handleFamilyRelationship(props, event, index) }
+                                onChange={event => handleFamilyRelationship(props, event, index)}
                               >
                                 {familyRelationshipList.map((item, pos) => {
                                   if (value.familyRelationship !== null && value.familyRelationship.id === item.id) {
-                                    console.log("index: ", index);
-                                    console.log("seleted: ", value.familyRelationship.name);
                                     return (
                                       <option key={pos} value={pos} selected>
                                         {item.name}
@@ -315,7 +313,7 @@ export default observer(function StaffModal(props) {
                                     );
                                   }
                                 })}
-                              </Field>                                
+                              </select>
                               <Field
                                 name={`familyRelationships.${index}.address`}
                                 type="text"
